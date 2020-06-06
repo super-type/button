@@ -44,7 +44,7 @@ const implement = async (
 
   const result = await fetch(url, opts);
   const resultJson = await result.text();
-  console.log(resultJson);
+  document.cookie = `supertypeID=${resultJson}`;
 };
 
 const SupertypeButton = () => {
