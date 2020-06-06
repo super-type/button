@@ -1,7 +1,7 @@
-import { ExampleComponent } from '.'
+import SupertypeButton from '.'
 
-describe('ExampleComponent', () => {
+describe('SupertypeComponent', () => {
   it('is truthy', () => {
-    expect(ExampleComponent).toBeTruthy()
+    expect(SupertypeButton).toBeTruthy()
   })
 })

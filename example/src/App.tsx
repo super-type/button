@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { ExampleComponent } from 'supertype-button'
+import SupertypeButton from 'supertype-button'
 import 'supertype-button/dist/index.css'
 
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  return <SupertypeButton />
 }
 
 export default App
