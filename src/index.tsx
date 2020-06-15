@@ -31,7 +31,7 @@ const useStyles = makeStyles({
     height: '50px',
     marginRight: '8px'
   },
-  success: {
+  alert: {
     width: '80%',
     margin: '0 auto',
     marginTop: '20px'
@@ -44,7 +44,11 @@ const SupertypeButton = () => {
   const [supertypeUsername, setSupertypeUsername] = useState('');
   const [supertypePassword, setSupertypePassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [loginFailure, setLoginFailure] = useState(false);
+  const [createSuccess, setCreateSuccess] = useState(false);
+  const [createFailure, setCreateFailure] = useState(false);
+  const [newUser, setNewUser] = useState(false);
 
   const implement = async (
     supertypeUsername: string,
@@ -65,11 +69,51 @@ const SupertypeButton = () => {
     const resultJson = await result.text();
     setDialogOpen(false);
     setLoading(false);
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-    }, 5000);
-    document.cookie = `supertypeID=${resultJson}`;
+    if (result.status === 200) {
+      setLoginSuccess(true);
+      setTimeout(() => {
+        setLoginSuccess(false);
+      }, 5000);
+      document.cookie = `supertypeID=${resultJson}`;
+    } else {
+      setLoginFailure(true);
+      setTimeout(() => {
+        setLoginFailure(false);
+      }, 5000);
+    }
+  };
+
+  const create = async (
+    supertypeUsername: string,
+    supertypePassword: string
+  ) => {
+    const url =
+      'https://z1lwetrbfe.execute-api.us-east-1.amazonaws.com/default/create-supertype-user';
+
+    const opts: RequestOpts = {
+      method: 'POST',
+      body: JSON.stringify({
+        username: supertypeUsername,
+        password: supertypePassword
+      })
+    };
+
+    const result = await fetch(url, opts);
+    // TODO return better success response, user's sid
+    // const resultJson = await result.text();
+    setDialogOpen(false);
+    setLoading(false);
+    if (result.status === 200) {
+      setCreateSuccess(true);
+      setTimeout(() => {
+        setCreateSuccess(false);
+      }, 5000);
+    } else {
+      setCreateFailure(true);
+      setTimeout(() => {
+        setCreateFailure(false);
+      }, 5000);
+    }
   };
 
   return (
@@ -89,47 +133,117 @@ const SupertypeButton = () => {
       >
         {!loading && (
           <div>
-            <DialogTitle id='form-dialog-title'>
-              Implement Supertype
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Log in with your Supertype account to immediately pair this
-                device with all others.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin='dense'
-                id='supertypeUsername'
-                label='Supertype Username'
-                type='text'
-                fullWidth
-                onChange={(e) => setSupertypeUsername(e.target.value)}
-              />
-              <TextField
-                autoFocus
-                margin='dense'
-                id='supertypePassword'
-                label='Supertype Password'
-                type='text'
-                fullWidth
-                onChange={(e) => setSupertypePassword(e.target.value)}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setDialogOpen(false)} color='primary'>
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  setLoading(true);
-                  implement(supertypeUsername, supertypePassword);
-                }}
-                color='primary'
-              >
-                Implement
-              </Button>
-            </DialogActions>
+            {!newUser && (
+              <div>
+                <DialogTitle id='form-dialog-title'>
+                  Implement Supertype
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Log in with your Supertype account to immediately pair this
+                    device with all others.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin='dense'
+                    id='supertypeUsername'
+                    label='Supertype Username'
+                    type='text'
+                    fullWidth
+                    onChange={(e) => setSupertypeUsername(e.target.value)}
+                  />
+                  <TextField
+                    autoFocus
+                    margin='dense'
+                    id='supertypePassword'
+                    label='Supertype Password'
+                    type='text'
+                    fullWidth
+                    onChange={(e) => setSupertypePassword(e.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setDialogOpen(false)} color='primary'>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setLoading(true);
+                      implement(supertypeUsername, supertypePassword);
+                    }}
+                    color='primary'
+                  >
+                    Implement
+                  </Button>
+                </DialogActions>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setNewUser(true);
+                    }}
+                    color='secondary'
+                  >
+                    Create an Account
+                  </Button>
+                </DialogActions>
+              </div>
+            )}
+            {newUser && (
+              <div>
+                <DialogTitle id='form-dialog-title'>
+                  Create a Supertype account
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Create a Supertype account. Pair devices once, and pair
+                    devices everywhere. Supertype never stores passwords, or any
+                    of your app data.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin='dense'
+                    id='supertypeUsername'
+                    label='Create a username'
+                    type='text'
+                    fullWidth
+                    onChange={(e) => setSupertypeUsername(e.target.value)}
+                  />
+                  <TextField
+                    autoFocus
+                    margin='dense'
+                    id='supertypePassword'
+                    label='Create a Password'
+                    type='text'
+                    fullWidth
+                    onChange={(e) => setSupertypePassword(e.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setDialogOpen(false)} color='primary'>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setLoading(true);
+                      create(supertypeUsername, supertypePassword);
+                    }}
+                    color='primary'
+                  >
+                    Create Account
+                  </Button>
+                </DialogActions>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setNewUser(false);
+                    }}
+                    color='secondary'
+                  >
+                    Log in
+                  </Button>
+                </DialogActions>
+              </div>
+            )}
           </div>
         )}
         <div>
@@ -140,9 +254,29 @@ const SupertypeButton = () => {
           )}
         </div>
       </Dialog>
-      <div className={classes.success}>
-        {success && (
+      <div className={classes.alert}>
+        {loginSuccess && (
           <Alert severity='success'>Supertype implemented successfully.</Alert>
+        )}
+      </div>
+      <div className={classes.alert}>
+        {loginFailure && (
+          <Alert severity='error'>Failed to login. Please try again</Alert>
+        )}
+      </div>
+      <div className={classes.alert}>
+        {createSuccess && (
+          <Alert severity='success'>
+            Supertype account created. Log in to continue.
+          </Alert>
+        )}
+      </div>
+      <div className={classes.alert}>
+        {createFailure && (
+          <Alert severity='error'>
+            Failed to create Supertype account. Pick a different username and
+            try again.
+          </Alert>
         )}
       </div>
     </div>
