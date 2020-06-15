@@ -1,6 +1,6 @@
 {
   "name": "supertype-button",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Button to integrate your app with the Supertype ecosystem",
   "author": "SomeMoosery",
   "license": "MIT",
@@ -61,6 +61,7 @@
     "dist"
   ],
   "dependencies": {
-    "@material-ui/core": "^4.10.1"
+    "@material-ui/core": "^4.10.1",
+    "@material-ui/lab": "^4.0.0-alpha.56"
   }
 }
