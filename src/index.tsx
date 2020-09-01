@@ -54,8 +54,7 @@ const SupertypeButton = () => {
     supertypeUsername: string,
     supertypePassword: string
   ) => {
-    const url =
-      'https://z1lwetrbfe.execute-api.us-east-1.amazonaws.com/default/implement-supertype';
+    const url = 'http://localhost:8080/loginUser';
 
     const opts: RequestOpts = {
       method: 'POST',
@@ -87,8 +86,7 @@ const SupertypeButton = () => {
     supertypeUsername: string,
     supertypePassword: string
   ) => {
-    const url =
-      'https://z1lwetrbfe.execute-api.us-east-1.amazonaws.com/default/create-supertype-user';
+    const url = 'http://localhost:8080/createUser';
 
     const opts: RequestOpts = {
       method: 'POST',
